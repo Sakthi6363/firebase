@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Firebase Form Example</title>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    form {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 16px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="myForm">
+    <h2>Subscribe</h2>
+    <input type="text" id="name" placeholder="Enter your name" required />
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Your Firebase configuration (replace with your actual config)
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCilh7Y7JGRdeXJLNSq5ZFDIG7gAaJ6Ylc",
+      authDomain: "trail-230d1.firebaseapp.com",
+      databaseURL: "https://trail-230d1-default-rtdb.firebaseio.com",
+      projectId: "trail-230d1",
+      storageBucket: "trail-230d1.firebasestorage.app",
+      messagingSenderId: "1021865716161",
+      appId: "1:1021865716161:web:9e27441cdb6bf45ef26740"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to database
+    const database = firebase.database();
+
+    // Form and input elements
+    const form = document.getElementById('myForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+
+      if (!name || !email) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      // Push data to Firebase Realtime Database
+      database.ref('subscribers').push({
+        name: name,
+        email: email,
+        submittedAt: new Date().toISOString()
+      })
+      .then(() => {
+        alert("Thank you for subscribing!");
+        form.reset();
+      })
+      .catch(error => {
+        alert("Error saving data: " + error.message);
+      });
+    });
+  </script>
+
+</body>
+</html>
